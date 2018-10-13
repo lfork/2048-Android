@@ -1,14 +1,45 @@
-package com.lfork.l2048
+package com.lfork.l2048.data
+
+import android.util.Log
 
 /**
  *
  * Created by 98620 on 2018/10/10.
  */
-class SquareMatrix(private val degree: Int) {
-    private val matrix = Array(degree) { IntArray(degree) }
+class SquareMatrix(val degree: Int){
+    val matrix = Array(degree) { IntArray(degree) }
 
     private var matrixSize = 0
 
+    var score = 0
+
+    private val historyMatrix = Array(degree) { IntArray(degree) }
+    private var historyScore = 0
+    private var historyMatrixSize = 0
+
+    fun revoke(){
+        if (historyScore > 0) {
+            score = historyScore
+            matrixSize  = historyMatrixSize
+            for (i in 0 until degree) {
+                for (j in 0 until degree) {
+                    matrix[i][j]=historyMatrix[i][j]
+                }
+            }
+            historyScore = 0
+            historyMatrixSize = 0
+        }
+    }
+
+    fun saveHistory(){
+        historyScore =  score
+        historyMatrixSize   =  matrixSize
+        for (i in 0 until degree) {
+            for (j in 0 until degree) {
+                historyMatrix[i][j] = matrix[i][j]
+            }
+        }
+    }
 
     /**
      * 在矩阵上随机生成几个数字
@@ -200,7 +231,7 @@ class SquareMatrix(private val degree: Int) {
         return tempArray
     }
 
-    var score = 0
+
 
     fun mergeLeft() {
         for (i in 0 until degree) {
@@ -271,7 +302,7 @@ class SquareMatrix(private val degree: Int) {
     }
 
     private fun canMove(): Boolean {
-        println("canMoveLeft: " + canMoveLeft() +
+        Log.d("eee", "canMoveLeft: " + canMoveLeft() +
                 "\ncanMoveRight: " + canMoveRight() +
                 "\ncanMoveUp: " + canMoveUp() +
                 "\ncanMoveDown:" + canMoveDown())

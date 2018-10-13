@@ -1,5 +1,6 @@
 package com.lfork.l2048
 
+import com.lfork.l2048.data.GameControlPanel
 import org.junit.Test
 import java.lang.Exception
 import java.util.*

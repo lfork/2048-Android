@@ -1,17 +1,22 @@
-package com.lfork.l2048
+package com.lfork.l2048.data
 
 /**
  *
  * Created by 98620 on 2018/10/11.
  */
-object GameControlPanel {
-    private lateinit var squareMatrix: SquareMatrix;
+object GameControlPanel : GameController {
+    lateinit var squareMatrix: SquareMatrix;
 
-    private var tempModel = 3
+    private var tempModel = 4
 
     var score = 0
 
-    var isOver = false
+    var isFinished = false
+
+    var isGameOver = false
+
+    var isWon = false
+
 
     fun start(model: Int) {
         squareMatrix = SquareMatrix(model)
@@ -19,26 +24,37 @@ object GameControlPanel {
         println(squareMatrix)
     }
 
-    fun moveLeft() {
-        if (!isOver && squareMatrix.canMoveLeft()) {
+    fun start(model: Int, matrix: SquareMatrix) {
+        squareMatrix = matrix
+        tempModel = model
+        println(squareMatrix)
+    }
+
+    override fun moveLeft() {
+        if (!isFinished && squareMatrix.canMoveLeft()) {
+            beforeMove()
             squareMatrix.doMoveLeft()
             squareMatrix.mergeLeft()
             squareMatrix.doMoveLeft()
             afterMove()
+
         }
     }
 
-    fun moveRight() {
-        if (!isOver && squareMatrix.canMoveRight()) {
+    override fun moveRight() {
+        if (!isFinished && squareMatrix.canMoveRight()) {
+            beforeMove()
             squareMatrix.doMoveRight()
             squareMatrix.mergeRight()
             squareMatrix.doMoveRight()
             afterMove()
+
         }
     }
 
-    fun moveUp() {
-        if (!isOver && squareMatrix.canMoveUp()) {
+    override fun moveUp() {
+        if (!isFinished && squareMatrix.canMoveUp()) {
+            beforeMove()
             squareMatrix.doMoveUp()
             squareMatrix.mergeUp()
             squareMatrix.doMoveUp()
@@ -46,8 +62,9 @@ object GameControlPanel {
         }
     }
 
-    fun moveDown() {
-        if (!isOver && squareMatrix.canMoveDown()) {
+    override fun moveDown() {
+        if (!isFinished && squareMatrix.canMoveDown()) {
+            beforeMove()
             squareMatrix.doMoveDown()
             squareMatrix.mergeDown()
             squareMatrix.doMoveDown()
@@ -55,17 +72,19 @@ object GameControlPanel {
         }
     }
 
-    fun pause() {
+    override fun revoke() {
+        squareMatrix.revoke()
     }
 
-    fun resume() {
+    override fun exit() {
     }
 
-
-    fun replay() {
+    override fun replay() {
         start(tempModel)
         score = 0
-        isOver = false
+        isFinished = false
+        isGameOver = false
+        isWon = false
     }
 
     private fun gameOver() {
@@ -76,30 +95,32 @@ object GameControlPanel {
         println("You Win");
     }
 
-    fun exit() {
 
+    private fun beforeMove(){
+        squareMatrix.saveHistory()
     }
 
     private fun afterMove() {
         squareMatrix.generateRandomNumber()
         score = squareMatrix.score
-        isOver = when {
+        isFinished = when {
             squareMatrix.gameWinJude() -> {
                 wonTheGame()
+                isWon = true
                 true
             }
             squareMatrix.gameOverJudge() -> {
                 gameOver()
+                isGameOver = true
                 true
             }
             else -> false
         }
 
-
         println("Score:$score  " +
                 "\n$squareMatrix " +
-                "\n\nisOver:$isOver")
+                "\n\nisFinished:$isFinished")
+
+
     }
-
-
 }
