@@ -1,6 +1,5 @@
 package com.lfork.l2048.main
 
-import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.DialogInterface
 import android.databinding.DataBindingUtil
@@ -15,19 +14,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import android.widget.Toast
 import com.lfork.l2048.*
 import com.lfork.l2048.databinding.MainActBinding
 import kotlinx.android.synthetic.main.main_act.*
 
-class MainActivity : AppCompatActivity(),ViewNavigator {
+class MainActivity : AppCompatActivity(), ViewNavigator {
 
 
     val TAG = "MainActivity"
 
     lateinit var binding: MainActBinding
     lateinit var viewModel: MainActivityViewModel
-    private lateinit var dialog:AlertDialog
+    private lateinit var dialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +43,12 @@ class MainActivity : AppCompatActivity(),ViewNavigator {
 
     }
 
-    private fun showDialog(msg:String){
+    private fun showDialog(msg: String) {
         dialog.setMessage(msg)
         dialog.show()
     }
 
-    private fun setupDialog(){
+    private fun setupDialog() {
         // 1. Instantiate an AlertDialog.Builder with its constructor
         val builder = AlertDialog.Builder(this)
 
@@ -147,7 +145,7 @@ class MainActivity : AppCompatActivity(),ViewNavigator {
                     }
 //                    Toast.makeText(this, "向" + action + "滑动", Toast.LENGTH_SHORT).show()
 
-                    Log.e("Tag","向" + action + "滑动" )
+                    Log.e("Tag", "向" + action + "滑动")
                 }
             }
         }
@@ -196,21 +194,25 @@ class MainActivity : AppCompatActivity(),ViewNavigator {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val textView: TextView
             if (convertView == null) {
-                textView = TextView(mContext)
-                if (items[position] > 0) {
-                    textView.text = items[position].toString()
+                textView = TextView(mContext).apply {
 
-                } else {
-                    textView.text = ""
+                    val number =  items[position];
+
+                    text = if (number > 0) {
+                        number.toString()
+                    } else {
+                        ""
+                    }
+                    setTextColor(Color.WHITE)
+                    textSize = px2sp(mContext,  getSizeByValue(number))
+                    setBackgroundColor(getColorByValue(mContext, number))
+                    layoutParams = ViewGroup.LayoutParams(dp2px(mContext, 90F), dp2px(mContext, 90F))
+                    gravity = Gravity.CENTER
                 }
 
-                textView.setTextColor(Color.WHITE)
-                textView.textSize = px2sp(mContext, 24F)
-                textView.setBackgroundColor(getColorByNumber(mContext, items[position]))
-                textView.layoutParams = ViewGroup.LayoutParams(dp2px(mContext, 90F), dp2px(mContext, 90F))
-                textView.gravity = Gravity.CENTER
                 if (views.size <= 16)
                     views.add(textView)
+
             } else {
                 textView = convertView as TextView
             }
@@ -224,7 +226,7 @@ class MainActivity : AppCompatActivity(),ViewNavigator {
             if (views.size > 0)
                 for (i in 0 until 16) {
                     views[i].text = if (items[i] == 0) "" else items[i].toString()
-                    views[i].setBackgroundColor(getColorByNumber(mContext, items[i]))
+                    views[i].setBackgroundColor(getColorByValue(mContext, items[i]))
                 }
         }
 
@@ -232,7 +234,6 @@ class MainActivity : AppCompatActivity(),ViewNavigator {
         override fun getItem(p0: Int): Any? = items[p0]
         override fun getItemId(position: Int): Long = position.toLong()
         override fun getCount(): Int = items.size
-
 
     }
 }

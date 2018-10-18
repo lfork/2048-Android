@@ -9,7 +9,7 @@ import java.security.AccessControlContext
  * Created by 98620 on 2018/10/13.
  */
 
-fun getColorByNumber(context: Context, value: Int): Int = when (value) {
+fun getColorByValue(context: Context, value: Int): Int = when (value) {
     0 -> context.resources.getColor(R.color.number0)
     2 -> context.resources.getColor(R.color.number2)
     4 -> context.resources.getColor(R.color.number4)
@@ -23,6 +23,13 @@ fun getColorByNumber(context: Context, value: Int): Int = when (value) {
     1024 -> context.resources.getColor(R.color.number1024)
     2048 -> context.resources.getColor(R.color.number2048)
     else -> context.resources.getColor(R.color.number4096)
+}
+
+fun getSizeByValue(value: Int): Float = when (value) {
+    2,4,8,16,32,64 -> 24F
+    128,256,512 -> 20F
+    1024,2048 -> 16F
+    else -> 16F
 }
 
 fun px2dp(context: Context, pxValue: Float): Float {

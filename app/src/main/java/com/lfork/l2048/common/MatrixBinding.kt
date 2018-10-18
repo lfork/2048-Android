@@ -14,8 +14,6 @@ import com.lfork.l2048.main.MainActivity.MatrixAdapter
  * @date 2018/10/13
  */
 object MatrixBinding {
-
-
 }
 
 /**
@@ -29,5 +27,3 @@ fun setMatrixItems(gridView: GridView, matrixToList: ArrayList<Int>) {
     adapter.notifyDataSetInvalidated()
     adapter.notifyDataSetChanged()
 }
-
-
